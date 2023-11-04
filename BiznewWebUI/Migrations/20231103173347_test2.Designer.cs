@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BiznewWebUI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231025083101_initial")]
-    partial class initial
+    [Migration("20231103173347_test2")]
+    partial class test2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,33 +25,48 @@ namespace BiznewWebUI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BiznewWebUI.Models.Adevort", b =>
+            modelBuilder.Entity("BiznewWebUI.Models.Advort", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AdevortsArticleId")
+                    b.Property<string>("AdvortsArticlesId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Link")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhotoUrl")
-                        .IsRequired()
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedUserId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdevortsArticleId");
+                    b.HasIndex("AdvortsArticlesId");
 
-                    b.ToTable("Adevort");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Advorts");
                 });
 
-            modelBuilder.Entity("BiznewWebUI.Models.AdevortsArticle", b =>
+            modelBuilder.Entity("BiznewWebUI.Models.AdvortsArticle", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -66,7 +81,7 @@ namespace BiznewWebUI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdevortsArticle");
+                    b.ToTable("AdvortsArticles");
                 });
 
             modelBuilder.Entity("BiznewWebUI.Models.Article", b =>
@@ -75,6 +90,7 @@ namespace BiznewWebUI.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AdevortsArticlesId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CategoryId")
@@ -92,13 +108,16 @@ namespace BiznewWebUI.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublished")
                         .HasColumnType("bit");
 
                     b.Property<string>("PhotoUrl")
@@ -116,8 +135,11 @@ namespace BiznewWebUI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedUserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -201,15 +223,56 @@ namespace BiznewWebUI.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("BiznewWebUI.Models.ContactUs", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SendDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isUnseen")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContactUsMessages");
                 });
 
             modelBuilder.Entity("BiznewWebUI.Models.LeaveComment", b =>
@@ -250,17 +313,26 @@ namespace BiznewWebUI.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TagName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("UpdatedUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tags");
                 });
@@ -482,18 +554,30 @@ namespace BiznewWebUI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BiznewWebUI.Models.Adevort", b =>
+            modelBuilder.Entity("BiznewWebUI.Models.Advort", b =>
                 {
-                    b.HasOne("BiznewWebUI.Models.AdevortsArticle", null)
+                    b.HasOne("BiznewWebUI.Models.AdvortsArticle", "AdvortsArticles")
                         .WithMany("Adevorts")
-                        .HasForeignKey("AdevortsArticleId");
+                        .HasForeignKey("AdvortsArticlesId");
+
+                    b.HasOne("BiznewWebUI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AdvortsArticles");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BiznewWebUI.Models.Article", b =>
                 {
-                    b.HasOne("BiznewWebUI.Models.AdevortsArticle", "AdevortsArticles")
+                    b.HasOne("BiznewWebUI.Models.AdvortsArticle", "AdevortsArticles")
                         .WithMany("Articles")
-                        .HasForeignKey("AdevortsArticlesId");
+                        .HasForeignKey("AdevortsArticlesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BiznewWebUI.Models.Category", "Category")
                         .WithMany("Articles")
@@ -502,7 +586,7 @@ namespace BiznewWebUI.Migrations
                         .IsRequired();
 
                     b.HasOne("BiznewWebUI.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Articles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -544,7 +628,7 @@ namespace BiznewWebUI.Migrations
                     b.HasOne("BiznewWebUI.Models.Tag", "Tags")
                         .WithMany("ArticleTag")
                         .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Article");
@@ -552,11 +636,33 @@ namespace BiznewWebUI.Migrations
                     b.Navigation("Tags");
                 });
 
+            modelBuilder.Entity("BiznewWebUI.Models.Category", b =>
+                {
+                    b.HasOne("BiznewWebUI.Models.User", "User")
+                        .WithMany("Categories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BiznewWebUI.Models.LeaveComment", b =>
                 {
                     b.HasOne("BiznewWebUI.Models.Article", null)
                         .WithMany("LeaveComments")
                         .HasForeignKey("ArticleId");
+                });
+
+            modelBuilder.Entity("BiznewWebUI.Models.Tag", b =>
+                {
+                    b.HasOne("BiznewWebUI.Models.User", "User")
+                        .WithMany("Tags")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -610,7 +716,7 @@ namespace BiznewWebUI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BiznewWebUI.Models.AdevortsArticle", b =>
+            modelBuilder.Entity("BiznewWebUI.Models.AdvortsArticle", b =>
                 {
                     b.Navigation("Adevorts");
 
@@ -639,6 +745,12 @@ namespace BiznewWebUI.Migrations
             modelBuilder.Entity("BiznewWebUI.Models.User", b =>
                 {
                     b.Navigation("ArticleComments");
+
+                    b.Navigation("Articles");
+
+                    b.Navigation("Categories");
+
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

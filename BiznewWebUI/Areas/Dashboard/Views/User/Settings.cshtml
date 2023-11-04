@@ -1,0 +1,64 @@
+﻿
+@model UserEditDTO;
+
+<form method="post" enctype="multipart/form-data">
+
+    <div class="form-group">
+        <div class="col-lg-6 col-12">
+
+        <label for="photo">Photo</label>
+        <input type="file" accept="image/*" id="photo" name="photo"  class="form-control-file"/>
+        </div>
+        <img src="" id="test_img" alt="" class=" col-lg-6 col-12" />
+
+        <span  class="text-danger">@ViewData["Error"]</span>
+    </div>
+    <div class="form-group"> 
+
+        <label asp-for="UserName"></label>
+        <input type="text" asp-for="UserName" class="form-control"/>
+        <span asp-validation-for="UserName" class="text text-danger"></span>
+    </div>
+    <div class="form-group">
+
+        <label asp-for="LastName"></label>
+        <input type="text"  asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text text-danger"></span>
+    </div>
+    <div class="form-group">
+
+        <label asp-for="FirstName"></label>
+        <input type="text"  asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text text-danger"></span>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4 mb-3 mb-sm-0">
+            <input type="password" asp-for=NewPassword class="form-control form-control-user"
+                   id="exampleInputPassword" placeholder="New Password">
+        </div>
+        <div class="col-sm-4">
+            <input type="password" asp-for=NewConfirmPassword  class="form-control form-control-user"
+                   id="exampleRepeatPassword" placeholder="Repeat New Password">
+        </div>
+        <div class="col-sm-4">
+            <input type="password" asp-for=CurrentPassword class="form-control form-control-user"
+                   id="exampleRepeatPassword" placeholder="Current Password">
+        </div>
+    </div>
+    <input type="submit" class="btn btn-info" value="Save" />
+</form>
+<script>
+    function readUrl(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload=function(e){
+                $("#test_img").attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0])
+        }
+    }
+    $("#photo").change(function () { 
+        readUrl(this)
+    });
+</script>

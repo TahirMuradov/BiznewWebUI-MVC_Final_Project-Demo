@@ -17,18 +17,18 @@
         public bool Status { get; set; }
         public bool IsFeatured { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsPublished { get; set; } 
         public string CreatedBy { get; set; }
         public Category Category { get; set; }
 
         public List<ArticleTag> ArticleTags { get; set; }
 
-        public string UserId { get; set; }
-        public User User { get; set; }
+
      
         public List<LeaveComment> LeaveComments { get; set; }
        
         public List<ArticleComments> ArticleComments { get; set; }
-        public AdevortsArticle AdevortsArticles { get; set; }
+        public AdvortsArticle AdevortsArticles { get; set; }
        
 
 

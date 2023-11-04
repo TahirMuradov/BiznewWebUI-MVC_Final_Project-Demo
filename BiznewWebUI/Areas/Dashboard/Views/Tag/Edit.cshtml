@@ -1,0 +1,19 @@
+﻿@model Tag
+@{
+
+    if (ViewData["Error"] is not null)
+    {
+        <p class=" text text-danger">@ViewData["Error"]</p>
+    }
+}
+<form method="post">
+    <div class="form-group">
+        <input type="hidden" value="@Model.Id" asp-for="Id" />
+        <label asp-for="TagName"></label>
+        <input type="text" asp-for="TagName" class="form-control" />
+        <span asp-validation-for="TagName"></span>
+    </div>
+    <input type="submit" value="Update" class="btn btn-success" />
+</form>
+
+

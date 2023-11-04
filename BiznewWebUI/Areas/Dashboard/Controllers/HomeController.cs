@@ -9,7 +9,14 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
     {
         public IActionResult Index()
         {
+            if (TempData["ErrorRole"] is not null)
+            {
+                
+            string errorMessage = TempData["ErrorRole"].ToString();
+            ViewBag.ErrorMessage = errorMessage;
+            }
             return View();
         }
+       
     }
 }

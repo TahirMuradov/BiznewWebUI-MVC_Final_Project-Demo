@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace BiznewWebUI.Data
 {
@@ -16,6 +17,10 @@ namespace BiznewWebUI.Data
         public DbSet<LeaveComment> LeaveComments { get; set; }
         public DbSet<ArticleComments> ArticleComments { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<ContactUs> ContactUsMessages { get; set; }
+         public DbSet<Advort> Advorts { get; set; }
+        public DbSet<AdvortsArticle> AdvortsArticles { get; set; }
+
         public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -30,7 +35,26 @@ namespace BiznewWebUI.Data
                        .HasForeignKey(c => c.UserId)
                        .OnDelete(DeleteBehavior.Restrict);
 
-             }
+
+            builder.Entity<ArticleTag>()
+       .HasOne(a => a.Tags)
+       .WithMany(b => b.ArticleTag)
+       .HasForeignKey(c => c.TagId)
+       .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Category>()
+      .HasOne(c => c.User)
+      .WithMany(c=> c.Categories)
+      .HasForeignKey(z => z.UserId)
+      .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Tag>()
+   .HasOne(c => c.User)
+   .WithMany(b=>b.Tags)
+   .HasForeignKey(z => z.UserId)
+   .OnDelete(DeleteBehavior.Restrict);
+
+        }
 
 
     }

@@ -2,7 +2,7 @@
 
 namespace BiznewWebUI.Models
 {
-    public class Category :BaseEntity
+    public class Category:BaseEntity
     {
  
         [MaxLength(50)]
@@ -10,5 +10,6 @@ namespace BiznewWebUI.Models
          public string CategoryName { get; set; }
         public List<Article>? Articles { get; set; }
 
+      
     }
 }

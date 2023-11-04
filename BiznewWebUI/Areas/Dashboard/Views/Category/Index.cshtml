@@ -1,0 +1,50 @@
+﻿@model List<Category>
+@inject Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
+@{
+    int counter = 0;
+}
+<table class="table table-bordered">
+    <div asp-validation-summary="All" class="text text-danger"></div>
+    <div class="mx-auto"><a class="btn btn-outline-success" asp-controller="category" asp-action="create">Create Category</a></div>
+    <thead>
+
+        <tr>
+            <td>#</td>
+            <td>Category Name</td>
+            <td>Created Info</td>
+            <td>Update Info</td>
+            <td>Actions</td>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            counter++;
+            <tr>
+                <td>@counter</td>
+                <td>@item.CategoryName</td>
+                <td>Created Date:@item.CreatedDate /@item.User.UserName </td>
+                @if (!string.IsNullOrEmpty(item.UpdatedUserId))
+                {
+                    @foreach (var users in _userManager.Users.ToList())
+                    {
+                        if (users.Id == item.UpdatedUserId)
+                        {
+                            <td>@users.UserName Date:@item.UpdateDate</td>
+                        }
+
+                    }
+                }
+                else
+                {
+                    <td>Not Update</td>
+                }
+
+                <td>  <a class="btn btn-danger" asp-area="dashboard" asp-controller="category" asp-action="Delete" asp-route-categoryId="@item.Id">Delete</a> <a class="btn btn-warning mx-3" asp-area="dashboard" asp-controller="category" asp-action="Edit" asp-route-categoryId="@item.Id">Edit</a></td>
+                <td>#</td>
+            </tr>
+        }
+    </tbody>
+</table>

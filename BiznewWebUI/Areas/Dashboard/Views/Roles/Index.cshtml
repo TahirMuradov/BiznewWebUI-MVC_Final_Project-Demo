@@ -13,6 +13,7 @@
             <td>#</td>
             <td>Role Name</td>
             <td>Actions</td>
+            <td>Actions Info</td>
 
         </tr>
     </thead>
@@ -23,7 +24,8 @@
             <tr>
                 <td>@counter</td>
                 <td>@item.Name</td>
-                <td>  <a class="btn btn-danger" asp-area="dashboard" asp-controller="Roles" asp-action="Delete" asp-route-roleId="@item.Id">Delete</a> <a class="btn btn-warning mx-3" asp-area="dashboard" asp-controller="Roles" asp-action="Edit" asp-route-roleId="@item.Id">Edit</a></td>
+           
+                <td>  <a class="btn btn-danger" asp-area="dashboard" asp-controller="tag" asp-action="Delete" asp-route-roleId="@item.Id">Delete</a> <a class="btn btn-warning mx-3" asp-area="dashboard" asp-controller="roles" asp-action="Edit" asp-route-roleId="@item.Id">Edit</a></td>
                 <td>#</td>
             </tr>
         }

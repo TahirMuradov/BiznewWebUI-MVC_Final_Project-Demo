@@ -10,13 +10,14 @@ namespace BiznewWebUI.Controllers
     {
         public readonly UserManager<User> _userManager;
         public readonly SignInManager<User> _signInManager;
-
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+        
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> rolemanager = null)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+         
         }
-        
+
         public IActionResult Login()
         {
             return View();
@@ -43,7 +44,8 @@ namespace BiznewWebUI.Controllers
                 ModelState.AddModelError("Error", "Email or Password is not valid!");
                 return View();
             }
-            return RedirectToAction("Index", "Home");
+          
+            return RedirectToAction(controllerName:"home",actionName:"index");
          
         }
         public IActionResult Register ()
@@ -51,28 +53,55 @@ namespace BiznewWebUI.Controllers
             return View();
         }
         [HttpPost]
-        public async Task< IActionResult> Register(RegisterDTO user) {
-            if(!ModelState.IsValid) { ModelState.AddModelError("Error", "Data is Empty!"); return View(); }
-            var checkEmail = await _userManager.FindByEmailAsync(user.Email);
-            if(checkEmail!= null)
+        public async Task< IActionResult> Register(RegisterDTO user) 
+        {
+            try
             {
-                 ModelState.AddModelError("Error", "Email is already existed!");
-                return View(); 
+                if (!ModelState.IsValid) { ModelState.AddModelError("Error", "Data is Empty!"); return View(); }
+                var checkEmail = await _userManager.FindByEmailAsync(user.Email);
+                if (checkEmail != null)
+                {
+                    ModelState.AddModelError("Error", "Email is already existed!");
+                    return View();
+                }
+
+                User NewUser = new User()
+                {
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserName = user.CreatingUserName(user.FirstName, user.LastName),
+                    PhotoUrl = "/admin/img/undraw_profile.svg",
+                    AboutAuthor = "/"
+                };
+
+
+                var result = await _userManager.CreateAsync(NewUser, user.Password);
+
+                if (!result.Succeeded)
+                {
+                    foreach (var item in result.Errors)
+                    {
+                        ModelState.AddModelError("Error", item.Description);
+
+                    }
+                    return View();
+                }
+
+                return RedirectToAction(actionName: nameof(Login));
             }
-            User NewUser = new User()
-            { Email = user.Email,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            UserName=user.FirstName+user.LastName,
-            
-            
+            catch (Exception ex)
+            {
 
-            };
-
-            await _userManager.CreateAsync(NewUser,user.Password);
-            
-
-            return RedirectToAction(actionName:nameof(Login));
+             return View(ex.Message);
+            }
+          
+        }
+        [HttpPost]
+        public async Task<IActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
