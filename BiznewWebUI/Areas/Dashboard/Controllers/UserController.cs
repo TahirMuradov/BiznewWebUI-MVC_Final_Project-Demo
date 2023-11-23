@@ -1,4 +1,5 @@
 ﻿using BiznewWebUI.Areas.Dashboard.ViewModels;
+using BiznewWebUI.Data;
 using BiznewWebUI.DTOs;
 using BiznewWebUI.Helper;
 using BiznewWebUI.Models;
@@ -12,19 +13,21 @@ using System.Text.Json;
 namespace BiznewWebUI.Areas.Dashboard.Controllers
 {
     [Area(nameof(Dashboard))]
+
     public class UserController : Controller
     {
         public readonly UserManager<User> _userManager;
         public readonly RoleManager<IdentityRole> _roleManager;
-      
+        public readonly AppDbContext _context;
         public readonly IHttpContextAccessor _contextAccessor;
         public readonly IWebHostEnvironment _env;
-        public UserController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IHttpContextAccessor contextAccessor, IWebHostEnvironment env)
+        public UserController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IHttpContextAccessor contextAccessor, IWebHostEnvironment env, AppDbContext context)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _contextAccessor = contextAccessor;
             _env = env;
+            _context = context;
         }
 
 
@@ -46,13 +49,36 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
             return View(users);
 
         }
-       
-        public async Task<IActionResult> DeletUser(string userId)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteUser(string userId)
         {
+            if (userId==null)          
+                return NotFound();
+                
+            User user=await _userManager.FindByIdAsync(userId);
+         
+            if (user == null)
+                return NotFound();
+            bool chechFoto = _context.Users.Any(x => x.PhotoUrl == user.PhotoUrl && x.Id != user.Id);
+            if (!chechFoto)
+            {
+            DirectoryInfo directoryInfo = new DirectoryInfo(Path.Combine(_env.WebRootPath, "uploads").ToLower());
+           //directoryInfo.GetFiles().Where(x => x.FullName == Path.Combine(_env.WebRootPath, user.PhotoUrl));
+                for (int i = 0; i < directoryInfo.GetFiles().Length; i++)
+                {
+                    if (directoryInfo.GetFiles()[i].FullName == Path.Combine(_env.WebRootPath, user.PhotoUrl))
+                    {
+                        directoryInfo.GetFiles()[i].Delete();
+                    }
+                }
 
-
+            }
+            IdentityResult result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                return NotFound();
             return RedirectToAction("Index");
         }
+       
         public async Task< IActionResult> AddRole(string userId)
         {
             if (userId == null) { return NotFound(); }
@@ -76,7 +102,7 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
         public async Task< IActionResult> AddRole(string userId,string role) {
 
             if (userId == null) { return View(); }
-            var checkUser = await _userManager.FindByIdAsync(userId);
+            User checkUser = await _userManager.FindByIdAsync(userId);
             if (checkUser == null) { return NotFound(); }
             var userAddRole = await _userManager.AddToRoleAsync(checkUser, role);
             if (!userAddRole.Succeeded)
@@ -125,6 +151,7 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
             
             if (photo is not null)
             {
+
             string PhotoUrl = await photo.SaveFileAsync(_env.WebRootPath);
                 if (checkedUser.PhotoUrl != "~/admin/img/undraw_profile.svg")
                 {

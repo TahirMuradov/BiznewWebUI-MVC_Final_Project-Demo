@@ -18,8 +18,8 @@ public string LastName { get; set; }
     
         public string CreatingUserName (string FirstName,string LastName)
         {
-            string userName = string.Empty;
-            userName = LastName + FirstName;
+            string userName = LastName + FirstName;
+           
             for (int i = 0; i < 6; i++)
             {
                 Random random = new Random();

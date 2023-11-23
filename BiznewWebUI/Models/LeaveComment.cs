@@ -4,7 +4,7 @@ namespace BiznewWebUI.Models
 {
     public class LeaveComment
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public string CommentContent { get; set; }
         public DateTime PublishDate { get; set; }
         [EmailAddress]

@@ -1,102 +1,99 @@
-﻿ @model List<User>  
-     @inject Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
+﻿@model List<User>
+@inject Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
 
 
 
- 
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                            <th>Name</th>
-                            <th>Roles</th>
-                            <th>Email</th>
-                            <th>RoleActions</th>
-                            <th>Photo</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
 
-                                        @foreach (var user in Model)
-                        {
-                            <tr>
-                                <td>
-                                    @user.LastName @user.FirstName
-                                </td>
-                                <td>
-                                    @{
-                                        var roles = await _userManager.GetRolesAsync(user);
 
-                                        foreach (var item in roles)
-                                        {
-                                                            <p>@item; </p>
-                                        }
-                                    }
-                                </td>
-                                <td>  @user.Email </td>
-                                <td>
-                                    <!-- Delet User Info Modal-->
-                                    <div class="modal" id="userDeleteModal@(user.Id)" tabindex="-1">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Modal title</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p>Modal body text goes here.</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                                </div>
-                                            </div>
+
+        <table class="table table-hover table-bordered" id="example">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Roles</th>
+                    <th>Email</th>
+                    <th>RoleActions</th>
+                    <th>Photo</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>
+                            @user.LastName @user.FirstName
+                        </td>
+                        <td>
+                            @{
+                                var roles = await _userManager.GetRolesAsync(user);
+
+                                foreach (var item in roles)
+                                {
+                                                                            <p>@item; </p>
+                                }
+                            }
+                        </td>
+                        <td>  @user.Email </td>
+                        <td>
+                         
+                            <!-- Delet User Info Modal-->
+                           <div  class="modal" id=@user.Id tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Info</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>@user.FirstName @user.LastName adli istifadeci silinsinmi?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                    <button type="button" onclick="modalClose('@user.Id')" class="btn btn-success @user.Id btn-secondary" data-bs-dismiss="modal">No</button>
+                                    <a type="button" asp-action="DeleteUser" asp-route-userId="@user.Id" class="btn btn-danger">Yes</a>
                                         </div>
                                     </div>
-                                    <button onclick=deleteUser(@user.Id) class="btn btn-danger">Delete</button>
- <a class="btn btn-warning mx-3" asp-area="dashboard" asp-controller="User" asp-action="Addrole" asp-route-userId="@user.Id">AddRole</a>
-                                </td>
-
-                                
-
-
-                                
-                            </tr>
-                        }
-                                    </tbody>
-
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Roles</th>
-                                            <th>UserName</th>
-                                            <th>Actions</th>
-                                            <th>Photo</th>
-                                            
-                                        </tr>
-                                    </tfoot>
-                    <tbody>
-                       
-                                       
-                                    </tbody>
-                                </table>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                    <button  onclick="Userdlt('@user.Id')" class="btn btn-danger">Delete</button>
+                            <a class="btn btn-warning mx-3" asp-area="dashboard" asp-controller="User" asp-action="Addrole" asp-route-userId="@user.Id">AddRole</a>
+                        </td>
 
-                </div>
-                <!-- /.container-fluid -->
+
+                        <td><img src="@user.PhotoUrl" width="100" /></td>
+
+
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+
+    
+
+
+              
+<!-- /.container-fluid -->
+
 <script>
-    function deleteUser(userId) 
-    {
-    console.log($(`.deleteUserModal${userId}`));
+         var modals=document.querySelectorAll(`.modal`)
+    var modal_close_btn = document.querySelectorAll('.btn-closemodal')
+   
+    
+    function Userdlt(userId) {
+      var modal=  document.getElementById(`${userId}`)
+    modal.classList.add("d-block")
 
+    };
+    function modalClose(modalId){
+        var modalclos = document.getElementById(`${modalId}`)
+     
+        modalclos.classList.remove("d-block")
 
     }
+       
 </script>
+
+
+

@@ -1,0 +1,124 @@
+﻿@model List<Advort>
+@inject Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
+
+@if (ViewData["ArticleEdit"] != null)
+{
+    <span class="text tex-danger">@ViewData["ArticleEdit"]</span>
+}
+
+<a class="btn btn-success my-3" asp-controller="advort" asp-action="create">advort Article</a>
+<table id="example" class="table table-dark table-hover table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Advort Name</th>
+            <th>Status</th>
+            <th>View Count</th>
+            <th>Advort Link</th>
+            <th>Created By</th>
+            <th>Created Date</th>
+
+            <th>IsDeleted</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int counter = 0;
+        }
+        @foreach (var advort in Model)
+        {
+            counter++;
+            <tr>
+                <td>
+                    @counter
+                </td>
+                <td>
+                    @advort.AdvortName
+
+                </td>
+                <td>
+                    @if (advort.IsPublished)
+                    {
+                      <>
+                      Shared
+                        </>
+                    }
+                    else
+                    {
+                        <>
+                        not Shared
+                        </>
+                    }
+                </td>
+                <td>
+                    @advort.viewCount
+                </td>
+                <td>
+                    <a class="btn btn-primary" target="_blank" href="@advort.Link">Click Here</a>
+                </td>
+                <td>
+                    @advort.User.FirstName  @advort.User.LastName
+                </td>
+                <td>
+                    @advort.CreatedDate
+                </td>
+                <td>
+                    @advort.IsDeleted
+                </td>
+                <td>
+                   <img src="@advort.Image"  width="150"/>
+
+                </td>
+                <td>
+               
+                    <button onclick="advortDlt('@advort.Id')" class="btn btn-danger">Delete</button> 
+                    <a class="btn btn-warning mx-3" asp-area="dashboard" asp-controller="advort" asp-action="Edit" asp-route-advortId="@advort.Id">Edit</a>
+                </td>
+                </tr>
+            <div class="modal" id=@advort.Id tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Info</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @advort.AdvortName adli reklam silinsinmi?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" onclick="modalClose('@advort.Id')" class="btn btn-success @advort.Id btn-secondary" data-bs-dismiss="modal">No</button>
+                            <a type="button" asp-area="dashboard" asp-controller="advort" asp-action="Delete" asp-route-advortId="@advort.Id" class="btn btn-danger">Yes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </tbody>
+ 
+</table>
+
+<script>
+    
+
+    let table = new DataTable('#example', {
+        responsive: true
+    });
+
+    var modals = document.querySelectorAll(`.modal`)
+    var modal_close_btn = document.querySelectorAll('.btn-closemodal')
+
+
+    function advortDlt(userId) {
+        var modal = document.getElementById(`${userId}`)
+        modal.classList.add("d-block")
+
+    };
+    function modalClose(modalId) {
+        var modalclos = document.getElementById(`${modalId}`)
+
+        modalclos.classList.remove("d-block")
+
+    }
+</script>

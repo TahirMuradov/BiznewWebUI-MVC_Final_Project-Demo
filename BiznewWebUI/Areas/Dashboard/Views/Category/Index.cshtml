@@ -3,7 +3,7 @@
 @{
     int counter = 0;
 }
-<table class="table table-bordered">
+<table id="example" class="table table-bordered">
     <div asp-validation-summary="All" class="text text-danger"></div>
     <div class="mx-auto"><a class="btn btn-outline-success" asp-controller="category" asp-action="create">Create Category</a></div>
     <thead>
@@ -41,10 +41,44 @@
                 {
                     <td>Not Update</td>
                 }
-
-                <td>  <a class="btn btn-danger" asp-area="dashboard" asp-controller="category" asp-action="Delete" asp-route-categoryId="@item.Id">Delete</a> <a class="btn btn-warning mx-3" asp-area="dashboard" asp-controller="category" asp-action="Edit" asp-route-categoryId="@item.Id">Edit</a></td>
-                <td>#</td>
+                <div class="modal" id=@item.Id tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Info</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>@item.CategoryName adli Category silinsinmi?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" onclick="modalClose('@item.Id')" class="btn btn-success @item.Id btn-secondary" data-bs-dismiss="modal">No</button>
+                                <a type="button" asp-area="dashboard" asp-controller="category" asp-action="Delete" asp-route-categoryId="@item.Id" class="btn btn-danger">Yes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <td>  <button onclick="Categorydlt('@item.Id')" class="btn btn-danger">Delete</button> <a class="btn btn-warning mx-3" asp-area="dashboard" asp-controller="category" asp-action="Edit" asp-route-categoryId="@item.Id">Edit</a></td>
+               
             </tr>
         }
     </tbody>
 </table>
+<script>
+    var modals = document.querySelectorAll(`.modal`)
+    var modal_close_btn = document.querySelectorAll('.btn-closemodal')
+
+
+    function Categorydlt(userId) {
+        var modal = document.getElementById(`${userId}`)
+        modal.classList.add("d-block")
+
+    };
+    function modalClose(modalId) {
+        var modalclos = document.getElementById(`${modalId}`)
+
+        modalclos.classList.remove("d-block")
+
+    }
+
+</script>

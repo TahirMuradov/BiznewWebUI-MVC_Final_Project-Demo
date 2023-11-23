@@ -1,5 +1,6 @@
 ﻿using BiznewWebUI.Data;
 using BiznewWebUI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using System.Security.Claims;
 namespace BiznewWebUI.Areas.Dashboard.Controllers
 {
     [Area(nameof(Dashboard))]
-
+ 
     public class TagController : Controller
     {
         private readonly AppDbContext _context;
@@ -26,7 +27,7 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
         {
 
 
-            var tags = _context.Tags
+            var tags = _context.Tags.Where(x=>x.IsDeleted==false)
                 .Include(x => x.User)
                 .ToList();
 
@@ -59,13 +60,26 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
             Guid guid = Guid.NewGuid();
             Tag newTag = new Tag()
             {
-                Id = guid.ToString(),
+                
                 TagName = tag.TagName,
                 CreatedDate = DateTime.Now,
                 UserId = CurrentUserId,
                
                 };
           await  _context.Tags.AddAsync(newTag);
+            User currentUser = _userManager.Users.FirstOrDefault(x => x.Id == CurrentUserId);
+            UserActions newAction = new UserActions
+            {
+                ActionName = "Create",
+                Tag = newTag,
+                
+                DateTime = DateTime.Now,
+               
+                userId = CurrentUserId,
+                IsActive = true
+
+            };
+            await _context.UserActions.AddAsync(newAction);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");                   
         }
@@ -73,18 +87,19 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
         public async Task<IActionResult> Delete(string tagId)
         {
             if (string.IsNullOrEmpty(tagId)) { return RedirectToAction("index"); }
-              var tag = await _context.Tags.FirstOrDefaultAsync(x => x.Id == tagId);
+              var tag = await _context.Tags.FirstOrDefaultAsync(x => x.Id.ToString() == tagId);
             if(tag is null) { return RedirectToAction("index"); };
-             _context.Tags.Remove(tag);
+            tag.IsDeleted = true;
+             _context.Tags.Update(tag);
             await _context.SaveChangesAsync();
             return RedirectToAction("index");
         }
         public async Task <IActionResult> Edit(string tagId)
         {
             if (tagId == null) return NotFound();
-          Tag? tag = await _context.Tags.FirstOrDefaultAsync(x => x.Id == tagId);
+          Tag? tag = await _context.Tags.FirstOrDefaultAsync(x => x.Id.ToString() == tagId);
             tag.UpdateDate= DateTime.Now;
-
+           
             if (tag == null) return NotFound();
           
            
@@ -105,12 +120,25 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
                 };
                 Tag updatedTag = await _context.Tags.FirstOrDefaultAsync(x => x.Id == tag.Id);
 
-
+             
                 updatedTag.UpdateDate = DateTime.Now;
                 updatedTag.UpdatedUserId = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
                updatedTag.TagName = tag.TagName;
             var resultUpdate= _context.Tags.Update(updatedTag);
-              var result= await _context.SaveChangesAsync();
+                var CurrentUserId = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                User currentUser = _userManager.Users.FirstOrDefault(x => x.Id == CurrentUserId);
+                Models.UserActions newAction = new Models.UserActions
+                {
+                    ActionName = "Edit",
+                    Tag = updatedTag,
+                    DateTime = DateTime.Now,
+               
+                    userId = CurrentUserId,
+                    IsActive = true
+
+                };
+                await _context.UserActions.AddAsync(newAction);
+                var result= await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             catch (Exception)

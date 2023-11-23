@@ -1,5 +1,84 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿
+@model Article
+
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input type="text" value="" asp-for="Title" class="form-control"/>
+        <span asp-validation-for="Title" class="text text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Content"></label>
+        <textarea id="editor" asp-for="Content" class="form-control"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Photo">Photo</label>
+        <input type="file" accept="image/*" id="photo" name="Photo" class="form-control-file" />
+    
+    </div>
+  <div class="form-group">
+    <label>Category</label>
+    <span asp-validation-for="CategoryId" class="text-danger"></span>
+        <select asp-for=CategoryId class="form-control" name="CategoryId" asp-items="@( (SelectList)ViewData["Categories"])">
+
+            <option>Select Category</option>
+          @*   @foreach (var category in ViewData["Categories"] as SelectList)
+            {
+                <option  value="@category.Value">@category.Text</option>
+
+            } *@
+        </select>
+    </div>
+   
+    <div class="form-group">
+        <label for="tagsId">Tags</label>
+       
+        <select multiple class="form-control" name="tagsId">
+            @foreach (var item in ViewBag.Tags as List<Tag>)
+            {
+                <option value="@item.Id">@item.TagName</option>
+            }
+        </select>
+        @if (ViewData["ErrorTags"] != null)
+        {
+            <p class="text-danger">@ViewData["ErrorTags"]</p>
+        }
+    </div>
+    <div class="form-group">
+        <label>Advorts</label>
+    
+        <select multiple  class="form-control" name="advortsId" asp-items="@ViewData["Advorts"]as SelectList">
+
+@* 
+            @foreach (var advorts in ViewData["Advorts"] as SelectList)
+            {
+                <option value="@advorts.Value">@advorts.Group</option>
+
+            } *@
+        </select>
+    </div>
+    @if (User.IsInRole("Admin") || User.IsInRole("Admin Editor"))
+    {
+        <div class="form-group">
+            <label asp-for="IsFeatured">Featured</label>
+            <input type="checkbox" asp-for="IsFeatured" />
+        </div>
+        <div class="form-group">
+            <label asp-for="IsPublished">IsPublished</label>
+            <input type="checkbox" asp-for="IsPublished" />
+        </div>
+    }
+    <input type="submit" class="btn btn-info" value="Create" />
+
+</form>
+
+@section scripts{
+    <script src="//cdn.ckeditor.com/4.22.0/standard/ckeditor.js"></script>
+    <script>
+
+
+        CKEDITOR.replace('editor');
+    </script>
 }

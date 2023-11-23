@@ -1,20 +1,17 @@
-﻿@model List<Tag>
+﻿ @model List<Tag>
 @inject Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
 @{
     int counter = 0;
 }
-<table class="table table-bordered">
-    <div asp-validation-summary="All" class="text text-danger"></div>
-    <div class="mx-auto"><a class="btn btn-outline-success" asp-controller="Tag" asp-action="create">Create Tag></a></div>
+<a asp-action="create" class="btn btn-success">Tag Create</a>
+<table id="example" class="table table-bordered table-hover table-active" style="width:100%">
     <thead>
-
         <tr>
-            <td>#</td>
-            <td>Tag Name</td>
-            <td>Created Info</td>
-            <td>Update Info</td>
-                       <td>Actions</td>
-
+            <th>#</th>
+            <th>Tag Name</th>
+            <th>Created Info</th>
+            <th>Update Info</th>
+            <th>Actions</th>
 
         </tr>
     </thead>
@@ -26,7 +23,7 @@
                 <td>@counter</td>
                 <td>@item.TagName</td>
                 <td>Created Date:@item.CreatedDate /@item.User.UserName </td>
-                @if (!string.IsNullOrEmpty( item.UpdatedUserId))
+                @if (!string.IsNullOrEmpty(item.UpdatedUserId))
                 {
                     @foreach (var users in _userManager.Users.ToList())
                     {
@@ -41,10 +38,55 @@
                 {
                     <td>Not Update</td>
                 }
-                
-                <td>  <a class="btn btn-danger" asp-area="dashboard" asp-controller="tag" asp-action="Delete" asp-route-tagId="@item.Id">Delete</a> <a class="btn btn-warning mx-3" asp-area="dashboard" asp-controller="tag" asp-action="Edit" asp-route-tagId="@item.Id">Edit</a></td>
-                <td>#</td>
+                <div class="modal" id=@item.Id tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Info</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>@item.TagName adli tag silinsinmi?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" onclick="modalClose('@item.Id')" class="btn btn-success @item.Id btn-secondary" data-bs-dismiss="modal">No</button>
+                                <a type="button" asp-area="dashboard" asp-controller="tag" asp-action="Delete" asp-route-tagId="@item.Id" class="btn btn-danger">Yes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <td>  <button onclick="Tagdlt('@item.Id')" class="btn btn-danger">Delete</button> <a class="btn btn-warning mx-3" asp-area="dashboard" asp-controller="tag" asp-action="Edit" asp-route-tagId="@item.Id">Edit</a></td>
+              
             </tr>
         }
     </tbody>
+    <tfoot>
+        <tr>
+            <th>#</th>
+            <th>Tag Name</th>
+            <th>Created Info</th>
+            <th>Update Info</th>
+            <th>Actions</th>
+           
+        </tr>
+    </tfoot>
 </table>
+
+<script>
+    var modals = document.querySelectorAll(`.modal`)
+    var modal_close_btn = document.querySelectorAll('.btn-closemodal')
+
+
+    function Tagdlt(userId) {
+        var modal = document.getElementById(`${userId}`)
+        modal.classList.add("d-block")
+
+    };
+    function modalClose(modalId) {
+        var modalclos = document.getElementById(`${modalId}`)
+
+        modalclos.classList.remove("d-block")
+
+    }
+
+</script>

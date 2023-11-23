@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BiznewWebUI.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class ModelsAddedUserActions : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace BiznewWebUI.Migrations
                 name: "AdvortsArticles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AdevortId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ArticleId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -28,7 +28,7 @@ namespace BiznewWebUI.Migrations
                 name: "ContactUsMessages",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Subject = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -109,16 +109,20 @@ namespace BiznewWebUI.Migrations
                 name: "Advorts",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AdvortName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Link = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdvortsArticlesId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    viewCount = table.Column<int>(type: "int", nullable: false),
+                    IsPublished = table.Column<bool>(type: "bit", nullable: false),
+                    AdvortsArticlesId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UpdatedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeletedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DeletedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeletControl = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -225,14 +229,15 @@ namespace BiznewWebUI.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CategoryName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UpdatedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeletedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DeletedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeletControl = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -249,14 +254,15 @@ namespace BiznewWebUI.Migrations
                 name: "Tags",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TagName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UpdatedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeletedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DeletedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeletControl = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -273,35 +279,33 @@ namespace BiznewWebUI.Migrations
                 name: "Articles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ViewCount = table.Column<int>(type: "int", nullable: false),
                     SeoUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
                     IsFeatured = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     IsPublished = table.Column<bool>(type: "bit", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdevortsArticlesId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AdvortsArticlesId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UpdatedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeletedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DeletedUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeletControl = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Articles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Articles_AdvortsArticles_AdevortsArticlesId",
-                        column: x => x.AdevortsArticlesId,
+                        name: "FK_Articles_AdvortsArticles_AdvortsArticlesId",
+                        column: x => x.AdvortsArticlesId,
                         principalTable: "AdvortsArticles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Articles_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -317,14 +321,59 @@ namespace BiznewWebUI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Actions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ActionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ArticleId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    TagId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CategoryNameId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AdvortId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    userId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Actions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Actions_Advorts_AdvortId",
+                        column: x => x.AdvortId,
+                        principalTable: "Advorts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Actions_Articles_ArticleId",
+                        column: x => x.ArticleId,
+                        principalTable: "Articles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Actions_Categories_CategoryNameId",
+                        column: x => x.CategoryNameId,
+                        principalTable: "Categories",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Actions_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Actions_Users_userId",
+                        column: x => x.userId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ArticleComments",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CommentContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PublishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ArticleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ArticleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -347,9 +396,9 @@ namespace BiznewWebUI.Migrations
                 name: "ArticleTags",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ArticleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TagId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ArticleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -372,12 +421,12 @@ namespace BiznewWebUI.Migrations
                 name: "LeaveComments",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CommentContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PublishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ArticleId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ArticleId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -388,6 +437,31 @@ namespace BiznewWebUI.Migrations
                         principalTable: "Articles",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Actions_AdvortId",
+                table: "Actions",
+                column: "AdvortId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Actions_ArticleId",
+                table: "Actions",
+                column: "ArticleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Actions_CategoryNameId",
+                table: "Actions",
+                column: "CategoryNameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Actions_TagId",
+                table: "Actions",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Actions_userId",
+                table: "Actions",
+                column: "userId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Advorts_AdvortsArticlesId",
@@ -410,9 +484,9 @@ namespace BiznewWebUI.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Articles_AdevortsArticlesId",
+                name: "IX_Articles_AdvortsArticlesId",
                 table: "Articles",
-                column: "AdevortsArticlesId");
+                column: "AdvortsArticlesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_CategoryId",
@@ -493,7 +567,7 @@ namespace BiznewWebUI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Advorts");
+                name: "Actions");
 
             migrationBuilder.DropTable(
                 name: "ArticleComments");
@@ -521,6 +595,9 @@ namespace BiznewWebUI.Migrations
 
             migrationBuilder.DropTable(
                 name: "LeaveComments");
+
+            migrationBuilder.DropTable(
+                name: "Advorts");
 
             migrationBuilder.DropTable(
                 name: "Tags");

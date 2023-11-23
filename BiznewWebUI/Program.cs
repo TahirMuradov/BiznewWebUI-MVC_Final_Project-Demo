@@ -2,9 +2,12 @@ using BiznewWebUI.Data;
 using BiznewWebUI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var a = builder.Configuration["ConnectionStrings:Movies"];
+      
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -13,6 +16,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 builder.Services.AddDefaultIdentity<User>().AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.Configure<IdentityOptions>(opts =>
+{
+    opts.SignIn.RequireConfirmedEmail = true;
+});
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Default Password settings.

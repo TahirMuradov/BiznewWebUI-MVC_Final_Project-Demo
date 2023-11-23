@@ -1,0 +1,127 @@
+﻿@model List<UserActions>
+
+@inject Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
+
+
+@if (ViewData["ArticleEdit"] != null)
+{
+    <span class="text tex-danger">@ViewData["ArticleEdit"]</span>
+}
+
+
+<table id="example" class="table table-dark table-hover table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Actoin Name</th>
+            <th>Status</th>
+            
+            
+            <th>Created By</th>
+            <th>Action Date</th>
+
+          
+            <th>Actions Info</th>
+            <th>Goruldu Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int counter = 0;
+        }
+        @{
+
+        }
+      @foreach (var item in Model)
+        {
+            var user = _userManager.Users.FirstOrDefault(x => x.Id == item.userId);
+            counter++;
+
+            <tr>
+                <td>
+                    @counter
+                </td>
+                <td>
+                    @item.ActionName
+                </td>
+                <td>
+                  @if (item.IsActive)
+                    {
+                        <p>Gorulmeyib</p>
+                    }
+                    else
+                    {
+                        <p>Goruldu</p>
+                    }
+                </td>
+                <td>
+                    @user.UserName
+                </td>
+                <td>
+                    @item.DateTime
+                </td>
+                <td>
+               
+                    @if (item.Category != null && item.ActionName == "Edit")
+                    {
+
+                        <span class="font-weight-bold">@user.UserName adli istifadeci terefinden @item.Category.CategoryName Adli category duzelis edildi</span>
+                    }
+                    @if (item.Advort != null && item.ActionName == "Create")
+                    {
+
+                        <span class="font-weight-bold">@user.UserName adli istifadeci terefinden @item.Advort.AdvortName Adli reklam yaradildi</span>
+                    }
+                    @if (item.Advort != null && item.ActionName == "Edit")
+                    {
+
+                        <span class="font-weight-bold">@user.UserName adli istifadeci terefinden @item.Advort.AdvortName Adli reklam duzelis edildi</span>
+                    }
+                    @if (item.Tag != null && item.ActionName == "Create")
+                    {
+
+                        <span class="font-weight-bold">@user.UserName adli istifadeci terefinden @item.Tag.TagName Adli tag yaradildi</span>
+                    }
+                    @if (item.Tag != null && item.ActionName == "Edit")
+                    {
+
+                        <span class="font-weight-bold">@user.UserName adli istifadeci terefinden @item.Tag.TagName Adli tag duzelis edildi</span>
+                    }
+                    @if (item.Article != null && item.ActionName == "Create")
+                    {
+
+                        <span class="font-weight-bold">@user.UserName adli istifadeci terefinden @item.Article.Title.Substring(0,5) Adli Meqale yaradildi</span>
+                    }
+                    @if (item.Article != null && item.ActionName == "Edit")
+                    {
+
+                        <span class="font-weight-bold">@user.UserName adli istifadeci terefinden @item.Article.Title.Substring(0,5) Adli meqaleye duzelis edildi</span>
+                    }
+                </td>
+                <td>
+                    @if (item.IsActive)
+                    {
+                        
+                        <a  asp-action="index" asp-route-actionId="@item.Id" class="btn btn-success"><i class="fa-regular fa-eye"></i></a>
+                    }
+                    else{
+
+                        <a asp-action="index" asp-route-actionId="@item.Id" class="btn btn-success disabled"><i class="fa-regular fa-eye"></i></a>
+
+                    }
+                    </td>
+            </tr>
+        }
+    </tbody>
+ 
+</table>
+
+<script>
+    
+
+    let table = new DataTable('#myTable', {
+        responsive: true
+    });
+
+   
+</script>

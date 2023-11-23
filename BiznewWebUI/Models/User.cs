@@ -13,6 +13,7 @@ namespace BiznewWebUI.Models
         public List<ArticleComments> ArticleComments { get; set; }
         public List<Category> Categories { get; set; }
         public List<Tag> Tags { get; set; }
+        public List<UserActions> ActionsUser { get; set; }
 
 
 

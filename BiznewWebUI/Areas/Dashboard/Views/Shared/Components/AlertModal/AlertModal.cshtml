@@ -1,0 +1,142 @@
+﻿@model List<UserActions>
+<!-- Nav Item - Alerts -->
+@{
+    int counter = 0;
+    
+}
+<p>
+
+@ViewBag.currentUrl;
+</p>
+<li  class="nav-item dropdown no-arrow mx-1 alertinfo">
+    <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-bell fa-fw"></i>
+        <!-- Counter - Alerts -->
+        <span class="badge badge-danger badge-counter alert-counter">
+           @Model.Count()
+        </span>
+    </a>
+    <!-- Dropdown - Alerts -->
+    <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+         aria-labelledby="alertsDropdown">
+        <h6 class="dropdown-header">
+            Alerts Center
+        </h6>
+        @foreach (var item in Model)
+        {
+            counter++;
+
+            <a class="dropdown-item d-flex align-items-center" href="#">
+            <div class="mr-3">
+                <div class="icon-circle bg-primary">
+                        <i class="fas fa-exclamation-triangle text-white"></i>
+                </div>
+            </div>
+            <div>
+                    <div class="small text-gray-500">@item.DateTime.ToString("dd MMM yyyy")</div>
+                    @if (item.Category!=null&& item.ActionName=="Create")
+                    {
+                        
+                <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Category.CategoryName Adli category yaradildi</span>
+                    }
+                    @if (item.Category != null && item.ActionName == "Edit")
+                    {
+
+                        <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Category.CategoryName Adli category duzelis edildi</span>
+                    }
+                    @if (item.Category != null && item.ActionName == "Delete")
+                    {
+
+                        <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Category.CategoryName Adli category silindi</span>
+                    }
+                    @if (item.Advort != null && item.ActionName == "Create")
+                    {
+
+                        <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Advort.AdvortName Adli reklam yaradildi</span>
+                    }
+                    @if (item.Advort != null && item.ActionName == "Edit")
+                    {
+
+                        <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Advort.AdvortName Adli reklam duzelis edildi</span>
+                    } 
+                    @if (item.Advort != null && item.ActionName == "Delete")
+                    {
+
+                        <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Advort.AdvortName Adli reklam silindi</span>
+                    }
+                    @if (item.Tag != null && item.ActionName == "Create")
+                    {
+
+                        <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Tag.TagName Adli tag yaradildi</span>
+                    }
+                    @if (item.Tag != null && item.ActionName == "Edit")
+                    {
+
+                        <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Tag.TagName Adli tag duzelis edildi</span>
+                    }  
+                    @if (item.Tag != null && item.ActionName == "Delete")
+                    {
+
+                        <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Tag.TagName Adli tag silindi</span>
+                    }
+                    @if (item.Article != null && item.ActionName == "Create")
+                    {
+
+                        <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Article.Title.Substring(0,5) Adli Meqale yaradildi</span>
+                    }
+                    @if (item.Article != null && item.ActionName == "Edit")
+                    {
+
+                        <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Article.Title.Substring(0,5) Adli meqaleye duzelis edildi</span>
+                    }
+                    @if (item.Article != null && item.ActionName == "Delete")
+                    {
+
+                        <span class="font-weight-bold">@item.User.UserName adli istifadeci terefinden @item.Article.Title.Substring(0,5) Adli meqaleye dsilindi</span>
+                    }
+                    @if(Model.Count==0){<p class="text text-gray">Bildiris Yoxdur</p>}
+            </div>
+            </a>
+            if (counter >= 3) break;
+
+        }
+          
+                <div class="w-100 h-auto d-flex flex-wrap">
+
+                <a class="dropdown-item text-center  text-gray-500 col-12 col-lg-6" asp-area="dashboard" asp-controller="actionsusers"  >Show All Alerts</a>
+                <a class="dropdown-item text-center col-12 col-lg-6 btn btn-danger" asp-area="dashboard" asp-controller="actionsusers" >Clear All</a>
+
+                    </div>
+
+                
+
+           
+
+    </div>
+</li>
+
+<script>
+
+    $(".alertinfo").click((e) => {
+        var alertCounter = $(".alert-counter").text();
+        if (alertCounter != 0) {
+            $(".alert-counter").html("0");
+        }
+       
+        $.ajax({
+            url: '/dashboard/Actionsusers/GetPartialViewData',
+            method: 'GET',
+            @* datatype:"Json", *@
+            success: function (data) {
+               console.log("Isledi",data)
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    })
+
+   
+    
+</script>

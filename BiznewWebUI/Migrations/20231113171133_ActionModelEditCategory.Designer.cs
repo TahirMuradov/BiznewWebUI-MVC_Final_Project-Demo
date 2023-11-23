@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BiznewWebUI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231103174224_test4")]
-    partial class test4
+    [Migration("20231113171133_ActionModelEditCategory")]
+    partial class ActionModelEditCategory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,20 +25,84 @@ namespace BiznewWebUI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BiznewWebUI.Models.Advort", b =>
+            modelBuilder.Entity("BiznewWebUI.Models.Action", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ActionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("AdvortId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ArticleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("TagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("userId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AdvortsArticlesId")
-                        .HasColumnType("nvarchar(450)");
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvortId");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("TagId");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("Actions");
+                });
+
+            modelBuilder.Entity("BiznewWebUI.Models.Advort", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdvortName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("AdvortsArticlesId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DeletedUserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeletControl")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Link")
                         .IsRequired()
@@ -54,6 +118,9 @@ namespace BiznewWebUI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("viewCount")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AdvortsArticlesId");
@@ -65,8 +132,9 @@ namespace BiznewWebUI.Migrations
 
             modelBuilder.Entity("BiznewWebUI.Models.AdvortsArticle", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdevortId")
                         .IsRequired()
@@ -83,16 +151,15 @@ namespace BiznewWebUI.Migrations
 
             modelBuilder.Entity("BiznewWebUI.Models.Article", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AdevortsArticlesId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("AdvortsArticlesId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CategoryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -104,6 +171,12 @@ namespace BiznewWebUI.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeletControl")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -121,9 +194,6 @@ namespace BiznewWebUI.Migrations
                     b.Property<string>("SeoUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -144,7 +214,7 @@ namespace BiznewWebUI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdevortsArticlesId");
+                    b.HasIndex("AdvortsArticlesId");
 
                     b.HasIndex("CategoryId");
 
@@ -155,12 +225,12 @@ namespace BiznewWebUI.Migrations
 
             modelBuilder.Entity("BiznewWebUI.Models.ArticleComments", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ArticleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("ArticleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CommentContent")
                         .IsRequired()
@@ -184,16 +254,15 @@ namespace BiznewWebUI.Migrations
 
             modelBuilder.Entity("BiznewWebUI.Models.ArticleTag", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ArticleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("ArticleId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("TagId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -206,8 +275,9 @@ namespace BiznewWebUI.Migrations
 
             modelBuilder.Entity("BiznewWebUI.Models.Category", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
@@ -216,6 +286,15 @@ namespace BiznewWebUI.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeletControl")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -236,8 +315,9 @@ namespace BiznewWebUI.Migrations
 
             modelBuilder.Entity("BiznewWebUI.Models.ContactUs", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -268,11 +348,12 @@ namespace BiznewWebUI.Migrations
 
             modelBuilder.Entity("BiznewWebUI.Models.LeaveComment", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ArticleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("ArticleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CommentContent")
                         .IsRequired()
@@ -298,11 +379,21 @@ namespace BiznewWebUI.Migrations
 
             modelBuilder.Entity("BiznewWebUI.Models.Tag", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeletControl")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("TagName")
                         .IsRequired()
@@ -542,6 +633,41 @@ namespace BiznewWebUI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("BiznewWebUI.Models.Action", b =>
+                {
+                    b.HasOne("BiznewWebUI.Models.Advort", "Advort")
+                        .WithMany()
+                        .HasForeignKey("AdvortId");
+
+                    b.HasOne("BiznewWebUI.Models.Article", "Article")
+                        .WithMany()
+                        .HasForeignKey("ArticleId");
+
+                    b.HasOne("BiznewWebUI.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("BiznewWebUI.Models.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId");
+
+                    b.HasOne("BiznewWebUI.Models.User", "User")
+                        .WithMany("ActionsUser")
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Advort");
+
+                    b.Navigation("Article");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Tag");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BiznewWebUI.Models.Advort", b =>
                 {
                     b.HasOne("BiznewWebUI.Models.AdvortsArticle", "AdvortsArticles")
@@ -561,11 +687,9 @@ namespace BiznewWebUI.Migrations
 
             modelBuilder.Entity("BiznewWebUI.Models.Article", b =>
                 {
-                    b.HasOne("BiznewWebUI.Models.AdvortsArticle", "AdevortsArticles")
+                    b.HasOne("BiznewWebUI.Models.AdvortsArticle", "AdvortsArticles")
                         .WithMany("Articles")
-                        .HasForeignKey("AdevortsArticlesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AdvortsArticlesId");
 
                     b.HasOne("BiznewWebUI.Models.Category", "Category")
                         .WithMany("Articles")
@@ -579,7 +703,7 @@ namespace BiznewWebUI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AdevortsArticles");
+                    b.Navigation("AdvortsArticles");
 
                     b.Navigation("Category");
 
@@ -732,6 +856,8 @@ namespace BiznewWebUI.Migrations
 
             modelBuilder.Entity("BiznewWebUI.Models.User", b =>
                 {
+                    b.Navigation("ActionsUser");
+
                     b.Navigation("ArticleComments");
 
                     b.Navigation("Articles");

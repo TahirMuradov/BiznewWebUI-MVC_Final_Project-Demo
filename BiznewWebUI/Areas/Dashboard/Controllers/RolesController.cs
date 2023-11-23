@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BiznewWebUI.Areas.Dashboard.Controllers
 {
     [Area(nameof(Dashboard))]
+
     public class RolesController : Controller
     {
         public readonly RoleManager<IdentityRole> _rolemanager;
@@ -16,7 +18,9 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
 
         public IActionResult Index()
         {
-            var roles=_rolemanager.Roles.ToList();
+            var roles=_rolemanager.Roles.
+                              
+                ToList();
             return View(roles);
         }
         [HttpGet]

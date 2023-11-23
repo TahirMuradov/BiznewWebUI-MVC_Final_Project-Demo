@@ -1,6 +1,7 @@
 ﻿using BiznewWebUI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
 
@@ -20,7 +21,7 @@ namespace BiznewWebUI.Data
         public DbSet<ContactUs> ContactUsMessages { get; set; }
          public DbSet<Advort> Advorts { get; set; }
         public DbSet<AdvortsArticle> AdvortsArticles { get; set; }
-
+        public DbSet<UserActions> UserActions { get; set; }
         public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -35,6 +36,7 @@ namespace BiznewWebUI.Data
                        .HasForeignKey(c => c.UserId)
                        .OnDelete(DeleteBehavior.Restrict);
 
+          
 
             builder.Entity<ArticleTag>()
        .HasOne(a => a.Tags)
@@ -53,6 +55,8 @@ namespace BiznewWebUI.Data
    .WithMany(b=>b.Tags)
    .HasForeignKey(z => z.UserId)
    .OnDelete(DeleteBehavior.Restrict);
+
+     
 
         }
 

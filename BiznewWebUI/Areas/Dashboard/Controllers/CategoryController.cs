@@ -1,5 +1,6 @@
 ﻿using BiznewWebUI.Data;
 using BiznewWebUI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using System.Security.Claims;
 namespace BiznewWebUI.Areas.Dashboard.Controllers
 {
     [Area(nameof(Dashboard))]
+
     public class CategoryController : Controller
     {
        private readonly AppDbContext _context;
@@ -23,7 +25,7 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
 
         public IActionResult Index()
         {
-            var category=_context.Categories
+            var category=_context.Categories.Where(x=>x.IsDeleted==false)
                 .Include(a=>a.User)
                 .ToList();
             return View(category);
@@ -36,9 +38,10 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
         public async Task<IActionResult> Create(Category category)
         {
 
-
+        
             var checkCategory = await _context.Categories.FirstOrDefaultAsync(x => x.CategoryName == category.CategoryName);
             var CurrentUserId = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            User currentUser = _userManager.Users.FirstOrDefault(x => x.Id == CurrentUserId);
             if (string.IsNullOrEmpty(category.CategoryName))
             {
 
@@ -52,7 +55,7 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
             Guid guid = Guid.NewGuid();
             Category newCategory = new()
             {
-                Id = guid.ToString(),
+               
                 CategoryName = category.CategoryName,
                 CreatedDate = DateTime.Now,
                 UserId=CurrentUserId
@@ -60,22 +63,47 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
 
             };
             await _context.Categories.AddAsync(newCategory);
+            Models.UserActions newAction = new Models.UserActions
+            {
+                ActionName = "Create",
+                Category = newCategory,
+                DateTime = DateTime.Now,
+            
+                userId = CurrentUserId,
+                IsActive = true
+
+            };
+            await _context.UserActions.AddAsync(newAction);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> Delete(string categoryId)
         {
+            var CurrentUserId = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            User currentUser = _userManager.Users.FirstOrDefault(x => x.Id == CurrentUserId);
             if (string.IsNullOrEmpty( categoryId  )) { return RedirectToAction("index"); }
-            var category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == categoryId);
+            var category = await _context.Categories.FirstOrDefaultAsync(x => x.Id.ToString() == categoryId);
             if (category is null) { return RedirectToAction("index"); };
-            _context.Categories.Remove(category);
+            category.IsDeleted = true;
+            _context.Categories.Update(category);
+            Models.UserActions newAction = new Models.UserActions
+            {
+                ActionName = "Delete",
+                Category = category,
+                DateTime = DateTime.Now,
+           
+                userId = CurrentUserId,
+                IsActive = true
+
+            };
+            await _context.UserActions.AddAsync(newAction);
             await _context.SaveChangesAsync();
             return RedirectToAction("index");
         }
         public async Task<IActionResult> Edit(string categoryId)
         {
             if (categoryId == null) return NotFound();
-            Category? category = await _context.Categories.FirstOrDefaultAsync(x => x.Id==categoryId );
+            Category? category = await _context.Categories.FirstOrDefaultAsync(x => x.Id.ToString() ==categoryId );
             if (category == null) return NotFound();
            
 
@@ -98,11 +126,26 @@ namespace BiznewWebUI.Areas.Dashboard.Controllers
                 };
                 Category updatedCategory = await _context.Categories.FirstOrDefaultAsync(x => x.Id == category.Id);
 
-
+                
                 updatedCategory.UpdateDate = DateTime.Now;
+              
                 updatedCategory.UpdatedUserId = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 updatedCategory.CategoryName = category.CategoryName;
                 var resultUpdate = _context.Categories.Update(updatedCategory);
+                var CurrentUserId = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                User currentUser = _userManager.Users.FirstOrDefault(x => x.Id == CurrentUserId);
+                Models.UserActions newAction = new Models.UserActions
+                {
+                    ActionName = "Edit",
+                    Category = updatedCategory,
+                    
+                    DateTime = DateTime.Now,
+              
+                    userId = CurrentUserId,
+                    IsActive = true
+
+                };
+                await _context.UserActions.AddAsync(newAction);
                 var result = await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
